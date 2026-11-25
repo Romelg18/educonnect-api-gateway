@@ -1,0 +1,51 @@
+x-mock: &mock
+  image: node:22-alpine
+  command: ["node", "/app/server.js"]
+  volumes:
+    - ./mocks/server.js:/app/server.js:ro
+  networks: [educonnect]
+
+services:
+  estudiantes:
+    <<: *mock
+    environment:
+      SERVICE_NAME: estudiantes
+
+  matriculas:
+    <<: *mock
+    environment:
+      SERVICE_NAME: matriculas
+
+  pagos:
+    <<: *mock
+    environment:
+      SERVICE_NAME: pagos
+
+  certificados:
+    <<: *mock
+    environment:
+      SERVICE_NAME: certificados
+
+  kong:
+    image: kong:3.9.5
+    environment:
+      KONG_DATABASE: "off"
+      KONG_DECLARATIVE_CONFIG: /kong/kong.yml
+      KONG_PROXY_ACCESS_LOG: /dev/stdout
+      KONG_PROXY_ERROR_LOG: /dev/stderr
+      KONG_ADMIN_LISTEN: "off"
+    volumes:
+      - ./kong/kong.yml:/kong/kong.yml:ro
+    ports:
+      - "127.0.0.1:8000:8000"
+    depends_on: [estudiantes, matriculas, pagos, certificados]
+    healthcheck:
+      test: ["CMD", "kong", "health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks: [educonnect]
+
+networks:
+  educonnect:
+    driver: bridge

@@ -1,0 +1,164 @@
+=== Inicio: mi� 25/11/2026 15:05:44.24 ===
+--- Recargar Kong con la configuracion actual
+ Container educonnect-gateway-pagos-1 Running 
+ Container educonnect-gateway-estudiantes-1 Running 
+ Container educonnect-gateway-matriculas-1 Running 
+ Container educonnect-gateway-kong-1 Recreate 
+ Container educonnect-gateway-kong-1 Recreated 
+ Container educonnect-gateway-kong-1 Starting 
+ Container educonnect-gateway-kong-1 Started 
+ Container educonnect-gateway-kong-1 Waiting 
+ Container educonnect-gateway-estudiantes-1 Waiting 
+ Container educonnect-gateway-matriculas-1 Waiting 
+ Container educonnect-gateway-pagos-1 Waiting 
+ Container educonnect-gateway-estudiantes-1 Healthy 
+ Container educonnect-gateway-pagos-1 Healthy 
+ Container educonnect-gateway-matriculas-1 Healthy 
+ Container educonnect-gateway-kong-1 Healthy 
+NAME                               IMAGE            COMMAND                  SERVICE       CREATED          STATUS                    PORTS
+educonnect-gateway-estudiantes-1   node:22-alpine   "docker-entrypoint.s…"   estudiantes   11 minutes ago   Up 11 minutes             
+educonnect-gateway-kong-1          kong:3.9.5       "/docker-entrypoint.…"   kong          14 seconds ago   Up 11 seconds (healthy)   127.0.0.1:8000->8000/tcp
+educonnect-gateway-matriculas-1    node:22-alpine   "docker-entrypoint.s…"   matriculas    11 minutes ago   Up 11 minutes             
+educonnect-gateway-pagos-1         node:22-alpine   "docker-entrypoint.s…"   pagos         11 minutes ago   Up 11 minutes             
+
+============ /api/estudiantes ============
+--- 1. Sin API Key
+HTTP/1.1 401 Unauthorized
+Date: Wed, 25 Nov 2026 20:05:58 GMT
+Content-Type: application/json; charset=utf-8
+Connection: keep-alive
+WWW-Authenticate: Key
+Content-Length: 96
+X-Kong-Response-Latency: 1
+Server: kong/3.9.5
+X-Kong-Request-Id: f80959012930327d004d82538de57948
+
+{
+  "message":"No API key found in request",
+  "request_id":"f80959012930327d004d82538de57948"
+}
+--- 2. API Key incorrecta
+HTTP/1.1 401 Unauthorized
+Date: Wed, 25 Nov 2026 20:05:58 GMT
+Content-Type: application/json; charset=utf-8
+Connection: keep-alive
+WWW-Authenticate: Key
+Content-Length: 81
+X-Kong-Response-Latency: 1
+Server: kong/3.9.5
+X-Kong-Request-Id: a91e5e0788b69b00d64222522c893d4d
+
+{
+  "message":"Unauthorized",
+  "request_id":"a91e5e0788b69b00d64222522c893d4d"
+}
+--- 3. API Key valida (valor ficticio no mostrado)
+HTTP/1.1 200 OK
+Content-Type: application/json
+Transfer-Encoding: chunked
+Connection: keep-alive
+X-Service-Name: estudiantes
+Date: Wed, 25 Nov 2026 20:06:02 GMT
+Server: kong/3.9.5
+X-Kong-Upstream-Latency: 2
+X-Kong-Proxy-Latency: 4004
+Via: 1.1 kong/3.9.5
+X-Kong-Request-Id: 566f940750a77a6f420e3f7bf3ee9576
+
+{"id":101,"nombre":"Ana Perez"}
+
+============ /api/matriculas ============
+--- 1. Sin API Key
+HTTP/1.1 401 Unauthorized
+Date: Wed, 25 Nov 2026 20:06:02 GMT
+Content-Type: application/json; charset=utf-8
+Connection: keep-alive
+WWW-Authenticate: Key
+Content-Length: 96
+X-Kong-Response-Latency: 1
+Server: kong/3.9.5
+X-Kong-Request-Id: 9b97492a5041256bab520f3dfcf0f51a
+
+{
+  "message":"No API key found in request",
+  "request_id":"9b97492a5041256bab520f3dfcf0f51a"
+}
+--- 2. API Key incorrecta
+HTTP/1.1 401 Unauthorized
+Date: Wed, 25 Nov 2026 20:06:02 GMT
+Content-Type: application/json; charset=utf-8
+Connection: keep-alive
+WWW-Authenticate: Key
+Content-Length: 81
+X-Kong-Response-Latency: 1
+Server: kong/3.9.5
+X-Kong-Request-Id: beb7e824e85ee916bf651f288a841340
+
+{
+  "message":"Unauthorized",
+  "request_id":"beb7e824e85ee916bf651f288a841340"
+}
+--- 3. API Key valida (valor ficticio no mostrado)
+HTTP/1.1 200 OK
+Content-Type: application/json
+Transfer-Encoding: chunked
+Connection: keep-alive
+X-Service-Name: matriculas
+Date: Wed, 25 Nov 2026 20:06:06 GMT
+Server: kong/3.9.5
+X-Kong-Upstream-Latency: 3
+X-Kong-Proxy-Latency: 4003
+Via: 1.1 kong/3.9.5
+X-Kong-Request-Id: 9494fa5e80f0bd53455b7f697eec653b
+
+{"id":501,"estudianteId":101,"estado":"ACTIVA"}
+
+============ /api/pagos ============
+--- 1. Sin API Key
+HTTP/1.1 401 Unauthorized
+Date: Wed, 25 Nov 2026 20:06:06 GMT
+Content-Type: application/json; charset=utf-8
+Connection: keep-alive
+WWW-Authenticate: Key
+Content-Length: 96
+X-Kong-Response-Latency: 1
+Server: kong/3.9.5
+X-Kong-Request-Id: 4b01cf24441a7305ea33b810e2bb0869
+
+{
+  "message":"No API key found in request",
+  "request_id":"4b01cf24441a7305ea33b810e2bb0869"
+}
+--- 2. API Key incorrecta
+HTTP/1.1 401 Unauthorized
+Date: Wed, 25 Nov 2026 20:06:06 GMT
+Content-Type: application/json; charset=utf-8
+Connection: keep-alive
+WWW-Authenticate: Key
+Content-Length: 81
+X-Kong-Response-Latency: 1
+Server: kong/3.9.5
+X-Kong-Request-Id: ffc98765e1bd1572b4d51026a93b7470
+
+{
+  "message":"Unauthorized",
+  "request_id":"ffc98765e1bd1572b4d51026a93b7470"
+}
+--- 3. API Key valida (valor ficticio no mostrado)
+HTTP/1.1 200 OK
+Content-Type: application/json
+Transfer-Encoding: chunked
+Connection: keep-alive
+X-Service-Name: pagos
+Date: Wed, 25 Nov 2026 20:06:10 GMT
+Server: kong/3.9.5
+X-Kong-Upstream-Latency: 2
+X-Kong-Proxy-Latency: 3977
+Via: 1.1 kong/3.9.5
+X-Kong-Request-Id: 9372c1013ed5672c7e40ba3c81da0872
+
+{"id":701,"matriculaId":501,"valor":150,"estado":"PENDIENTE"}
+--- Logs de los mocks
+estudiantes-1  | 2026-11-25T20:06:02.245Z [estudiantes] GET /estudiantes -> 200
+pagos-1        | 2026-11-25T20:06:10.480Z [pagos] GET /pagos -> 200
+matriculas-1   | 2026-11-25T20:06:06.367Z [matriculas] GET /matriculas -> 200

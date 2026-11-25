@@ -1,0 +1,173 @@
+--- Levantar certificados y recargar Kong
+ Container educonnect-gateway-matriculas-1 Running 
+ Container educonnect-gateway-pagos-1 Running 
+ Container educonnect-gateway-estudiantes-1 Running 
+ Container educonnect-gateway-certificados-1 Creating 
+ Container educonnect-gateway-certificados-1 Created 
+ Container educonnect-gateway-kong-1 Recreate 
+ Container educonnect-gateway-kong-1 Recreated 
+ Container educonnect-gateway-certificados-1 Starting 
+ Container educonnect-gateway-certificados-1 Started 
+ Container educonnect-gateway-kong-1 Starting 
+ Container educonnect-gateway-kong-1 Started 
+ Container educonnect-gateway-certificados-1 Waiting 
+ Container educonnect-gateway-kong-1 Waiting 
+ Container educonnect-gateway-estudiantes-1 Waiting 
+ Container educonnect-gateway-matriculas-1 Waiting 
+ Container educonnect-gateway-pagos-1 Waiting 
+ Container educonnect-gateway-estudiantes-1 Healthy 
+ Container educonnect-gateway-certificados-1 Healthy 
+ Container educonnect-gateway-matriculas-1 Healthy 
+ Container educonnect-gateway-pagos-1 Healthy 
+ Container educonnect-gateway-kong-1 Healthy 
+NAME                                IMAGE            COMMAND                  SERVICE        CREATED          STATUS                    PORTS
+educonnect-gateway-certificados-1   node:22-alpine   "docker-entrypoint.s…"   certificados   14 seconds ago   Up 11 seconds             
+educonnect-gateway-estudiantes-1    node:22-alpine   "docker-entrypoint.s…"   estudiantes    22 minutes ago   Up 22 minutes             
+educonnect-gateway-kong-1           kong:3.9.5       "/docker-entrypoint.…"   kong           13 seconds ago   Up 11 seconds (healthy)   127.0.0.1:8000->8000/tcp
+educonnect-gateway-matriculas-1     node:22-alpine   "docker-entrypoint.s…"   matriculas     22 minutes ago   Up 22 minutes             
+educonnect-gateway-pagos-1          node:22-alpine   "docker-entrypoint.s…"   pagos          22 minutes ago   Up 4 minutes              
+--- Esperando el inicio del siguiente minuto
+=== Inicio de la secuencia: mi� 25/11/2026 15:17:02.65 ===
+
+--- Sin API Key: GET /api/certificados
+HTTP/1.1 401 Unauthorized
+Date: Wed, 25 Nov 2026 20:17:02 GMT
+Content-Type: application/json; charset=utf-8
+Connection: keep-alive
+WWW-Authenticate: Key
+Content-Length: 96
+X-Kong-Response-Latency: 1
+Server: kong/3.9.5
+X-Kong-Request-Id: 6076ca2d6b2af54d5962ae060309d543
+
+{
+  "message":"No API key found in request",
+  "request_id":"6076ca2d6b2af54d5962ae060309d543"
+}
+--- API Key incorrecta: GET /api/certificados
+HTTP/1.1 401 Unauthorized
+Date: Wed, 25 Nov 2026 20:17:02 GMT
+Content-Type: application/json; charset=utf-8
+Connection: keep-alive
+WWW-Authenticate: Key
+Content-Length: 81
+X-Kong-Response-Latency: 1
+Server: kong/3.9.5
+X-Kong-Request-Id: 67cfc210bfddff264c7f581af044b43a
+
+{
+  "message":"Unauthorized",
+  "request_id":"67cfc210bfddff264c7f581af044b43a"
+}
+
+--- Peticion 1 con API Key valida: GET /api/certificados
+HTTP/1.1 200 OK
+Content-Type: application/json
+Transfer-Encoding: chunked
+Connection: keep-alive
+RateLimit-Reset: 58
+X-RateLimit-Limit-Minute: 3
+X-RateLimit-Remaining-Minute: 2
+RateLimit-Limit: 3
+RateLimit-Remaining: 2
+X-Service-Name: certificados
+Date: Wed, 25 Nov 2026 20:17:06 GMT
+Server: kong/3.9.5
+X-Kong-Upstream-Latency: 10
+X-Kong-Proxy-Latency: 4005
+Via: 1.1 kong/3.9.5
+X-Kong-Request-Id: fe46f6259963406beaba055705f6d433
+
+{"id":901,"estudianteId":101,"tipo":"MATRICULA","estado":"EMITIDO"}
+
+--- Peticion 2 con API Key valida: GET /api/certificados
+HTTP/1.1 200 OK
+Content-Type: application/json
+Transfer-Encoding: chunked
+Connection: keep-alive
+RateLimit-Reset: 54
+X-RateLimit-Limit-Minute: 3
+X-RateLimit-Remaining-Minute: 1
+RateLimit-Limit: 3
+RateLimit-Remaining: 1
+X-Service-Name: certificados
+Date: Wed, 25 Nov 2026 20:17:10 GMT
+Server: kong/3.9.5
+X-Kong-Upstream-Latency: 2
+X-Kong-Proxy-Latency: 4004
+Via: 1.1 kong/3.9.5
+X-Kong-Request-Id: edc9f52ed330b47d1644e870058e552e
+
+{"id":901,"estudianteId":101,"tipo":"MATRICULA","estado":"EMITIDO"}
+
+--- Peticion 3 con API Key valida: GET /api/certificados
+HTTP/1.1 200 OK
+Content-Type: application/json
+Transfer-Encoding: chunked
+Connection: keep-alive
+RateLimit-Reset: 50
+X-RateLimit-Limit-Minute: 3
+X-RateLimit-Remaining-Minute: 0
+RateLimit-Limit: 3
+RateLimit-Remaining: 0
+X-Service-Name: certificados
+Date: Wed, 25 Nov 2026 20:17:14 GMT
+Server: kong/3.9.5
+X-Kong-Upstream-Latency: 2
+X-Kong-Proxy-Latency: 3987
+Via: 1.1 kong/3.9.5
+X-Kong-Request-Id: da05e639b24247665a29211b17555764
+
+{"id":901,"estudianteId":101,"tipo":"MATRICULA","estado":"EMITIDO"}
+
+--- Peticion 4 con API Key valida: GET /api/certificados
+HTTP/1.1 429 Too Many Requests
+Date: Wed, 25 Nov 2026 20:17:14 GMT
+Content-Type: application/json; charset=utf-8
+Connection: keep-alive
+RateLimit-Reset: 46
+Retry-After: 46
+X-RateLimit-Limit-Minute: 3
+X-RateLimit-Remaining-Minute: 0
+RateLimit-Limit: 3
+RateLimit-Remaining: 0
+Content-Length: 92
+X-Kong-Response-Latency: 2
+Server: kong/3.9.5
+X-Kong-Request-Id: 0f203d3963694f14c436cb434d24b00c
+
+{
+  "message":"API rate limit exceeded",
+  "request_id":"0f203d3963694f14c436cb434d24b00c"
+}
+
+----- Comprobacion del limite general despues de certificados -----
+
+--- Peticion 5 con API Key valida: GET /api/estudiantes
+HTTP/1.1 200 OK
+Content-Type: application/json
+Transfer-Encoding: chunked
+Connection: keep-alive
+RateLimit-Reset: 45
+RateLimit-Limit: 5
+X-RateLimit-Remaining-Minute: 4
+X-RateLimit-Limit-Minute: 5
+RateLimit-Remaining: 4
+X-Service-Name: estudiantes
+Date: Wed, 25 Nov 2026 20:17:19 GMT
+Server: kong/3.9.5
+X-Kong-Upstream-Latency: 2
+X-Kong-Proxy-Latency: 4004
+Via: 1.1 kong/3.9.5
+X-Kong-Request-Id: 1b7c8d5497a5225ef7029255bf675d40
+
+{"id":101,"nombre":"Ana Perez"}
+
+=== Fin de la secuencia ===
+15:17:20
+--- Logs de los mocks
+certificados-1  | Mock certificados escuchando en el puerto 3000
+certificados-1  | 2026-11-25T20:17:06.800Z [certificados] GET /certificados -> 200
+certificados-1  | 2026-11-25T20:17:10.859Z [certificados] GET /certificados -> 200
+certificados-1  | 2026-11-25T20:17:14.899Z [certificados] GET /certificados -> 200
+estudiantes-1   | 2026-11-25T20:17:19.007Z [estudiantes] GET /estudiantes -> 200

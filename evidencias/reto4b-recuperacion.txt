@@ -1,0 +1,25 @@
+=== Inicio: mi� 25/11/2026 15:13:51.60 ===
+--- Sin recrear Kong
+NAME                               IMAGE            COMMAND                  SERVICE       CREATED          STATUS                   PORTS
+educonnect-gateway-estudiantes-1   node:22-alpine   "docker-entrypoint.s…"   estudiantes   19 minutes ago   Up 19 minutes            
+educonnect-gateway-kong-1          kong:3.9.5       "/docker-entrypoint.…"   kong          2 minutes ago    Up 2 minutes (healthy)   127.0.0.1:8000->8000/tcp
+educonnect-gateway-matriculas-1    node:22-alpine   "docker-entrypoint.s…"   matriculas    19 minutes ago   Up 19 minutes            
+educonnect-gateway-pagos-1         node:22-alpine   "docker-entrypoint.s…"   pagos         19 minutes ago   Up About a minute        
+HTTP/1.1 200 OK
+Content-Type: application/json
+Transfer-Encoding: chunked
+Connection: keep-alive
+X-RateLimit-Remaining-Minute: 4
+RateLimit-Limit: 5
+RateLimit-Remaining: 4
+RateLimit-Reset: 9
+X-RateLimit-Limit-Minute: 5
+X-Service-Name: pagos
+Date: Wed, 25 Nov 2026 20:13:55 GMT
+Server: kong/3.9.5
+X-Kong-Upstream-Latency: 11
+X-Kong-Proxy-Latency: 4005
+Via: 1.1 kong/3.9.5
+X-Kong-Request-Id: cca3260a9489fc3df0e23e760c8d3f1b
+
+{"id":701,"matriculaId":501,"valor":150,"estado":"PENDIENTE"}

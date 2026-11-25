@@ -1,0 +1,700 @@
+=== Inicio: mi� 25/11/2026 15:27:56.80 ===
+ Network educonnect-gateway_educonnect Creating 
+ Network educonnect-gateway_educonnect Creating 
+ Network educonnect-gateway_educonnect Created 
+ Network educonnect-gateway_educonnect Created 
+ Container educonnect-gateway-estudiantes-1 Creating 
+ Container educonnect-gateway-matriculas-1 Creating 
+ Container educonnect-gateway-pagos-1 Creating 
+ Container educonnect-gateway-certificados-1 Creating 
+ Container educonnect-gateway-estudiantes-1 Created 
+ Container educonnect-gateway-certificados-1 Created 
+ Container educonnect-gateway-pagos-1 Created 
+ Container educonnect-gateway-matriculas-1 Created 
+ Container educonnect-gateway-kong-1 Creating 
+ Container educonnect-gateway-kong-1 Created 
+ Container educonnect-gateway-certificados-1 Starting 
+ Container educonnect-gateway-pagos-1 Starting 
+ Container educonnect-gateway-matriculas-1 Starting 
+ Container educonnect-gateway-estudiantes-1 Starting 
+ Container educonnect-gateway-certificados-1 Started 
+ Container educonnect-gateway-pagos-1 Started 
+ Container educonnect-gateway-matriculas-1 Started 
+ Container educonnect-gateway-estudiantes-1 Started 
+ Container educonnect-gateway-kong-1 Starting 
+ Container educonnect-gateway-kong-1 Started 
+ Container educonnect-gateway-estudiantes-1 Waiting 
+ Container educonnect-gateway-matriculas-1 Waiting 
+ Container educonnect-gateway-pagos-1 Waiting 
+ Container educonnect-gateway-certificados-1 Waiting 
+ Container educonnect-gateway-kong-1 Waiting 
+ Container educonnect-gateway-estudiantes-1 Healthy 
+ Container educonnect-gateway-matriculas-1 Healthy 
+ Container educonnect-gateway-certificados-1 Healthy 
+ Container educonnect-gateway-pagos-1 Healthy 
+ Container educonnect-gateway-kong-1 Healthy 
+NAME                                IMAGE            COMMAND                  SERVICE        CREATED          STATUS                    PORTS
+educonnect-gateway-certificados-1   node:22-alpine   "docker-entrypoint.s…"   certificados   13 seconds ago   Up 12 seconds             
+educonnect-gateway-estudiantes-1    node:22-alpine   "docker-entrypoint.s…"   estudiantes    13 seconds ago   Up 11 seconds             
+educonnect-gateway-kong-1           kong:3.9.5       "/docker-entrypoint.…"   kong           13 seconds ago   Up 11 seconds (healthy)   127.0.0.1:8000->8000/tcp
+educonnect-gateway-matriculas-1     node:22-alpine   "docker-entrypoint.s…"   matriculas     13 seconds ago   Up 11 seconds             
+educonnect-gateway-pagos-1          node:22-alpine   "docker-entrypoint.s…"   pagos          13 seconds ago   Up 12 seconds             
+3.9.5
+172.19.0.5      estudiantes
+172.19.0.4      matriculas
+172.19.0.3      pagos
+172.19.0.2      certificados
+
+################ A. Autenticacion y rutas ################
+ Container educonnect-gateway-certificados-1 Running 
+ Container educonnect-gateway-estudiantes-1 Running 
+ Container educonnect-gateway-matriculas-1 Running 
+ Container educonnect-gateway-pagos-1 Running 
+ Container educonnect-gateway-kong-1 Recreate 
+ Container educonnect-gateway-kong-1 Recreated 
+ Container educonnect-gateway-kong-1 Starting 
+ Container educonnect-gateway-kong-1 Started 
+ Container educonnect-gateway-pagos-1 Waiting 
+ Container educonnect-gateway-certificados-1 Waiting 
+ Container educonnect-gateway-kong-1 Waiting 
+ Container educonnect-gateway-estudiantes-1 Waiting 
+ Container educonnect-gateway-matriculas-1 Waiting 
+ Container educonnect-gateway-matriculas-1 Healthy 
+ Container educonnect-gateway-estudiantes-1 Healthy 
+ Container educonnect-gateway-certificados-1 Healthy 
+ Container educonnect-gateway-pagos-1 Healthy 
+ Container educonnect-gateway-kong-1 Healthy 
+
+--- Sin API Key: GET /api/estudiantes. Esperado: 401
+HTTP/1.1 401 Unauthorized
+Date: Wed, 25 Nov 2026 20:28:24 GMT
+Content-Type: application/json; charset=utf-8
+Connection: keep-alive
+WWW-Authenticate: Key
+Content-Length: 96
+X-Kong-Response-Latency: 0
+Server: kong/3.9.5
+X-Kong-Request-Id: 92373e0f6265ae2017d4040d9da06b61
+
+{
+  "message":"No API key found in request",
+  "request_id":"92373e0f6265ae2017d4040d9da06b61"
+}
+
+--- API Key incorrecta: GET /api/estudiantes. Esperado: 401
+HTTP/1.1 401 Unauthorized
+Date: Wed, 25 Nov 2026 20:28:24 GMT
+Content-Type: application/json; charset=utf-8
+Connection: keep-alive
+WWW-Authenticate: Key
+Content-Length: 81
+X-Kong-Response-Latency: 1
+Server: kong/3.9.5
+X-Kong-Request-Id: 4d836e6c621f46250d84750b7bbfec7c
+
+{
+  "message":"Unauthorized",
+  "request_id":"4d836e6c621f46250d84750b7bbfec7c"
+}
+
+--- API Key valida: GET /api/estudiantes. Esperado: 200
+HTTP/1.1 200 OK
+Content-Type: application/json
+Transfer-Encoding: chunked
+Connection: keep-alive
+X-RateLimit-Remaining-Minute: 4
+X-RateLimit-Limit-Minute: 5
+RateLimit-Remaining: 4
+RateLimit-Reset: 36
+RateLimit-Limit: 5
+X-Service-Name: estudiantes
+Date: Wed, 25 Nov 2026 20:28:28 GMT
+Server: kong/3.9.5
+X-Kong-Upstream-Latency: 10
+X-Kong-Proxy-Latency: 4004
+Via: 1.1 kong/3.9.5
+X-Kong-Request-Id: 38e07e1455d07163cef1370b5e894b65
+
+{"id":101,"nombre":"Ana Perez"}
+
+--- Sin API Key: GET /api/matriculas. Esperado: 401
+HTTP/1.1 401 Unauthorized
+Date: Wed, 25 Nov 2026 20:28:28 GMT
+Content-Type: application/json; charset=utf-8
+Connection: keep-alive
+WWW-Authenticate: Key
+Content-Length: 96
+X-Kong-Response-Latency: 1
+Server: kong/3.9.5
+X-Kong-Request-Id: 2613934b5a4705254c835812f7774835
+
+{
+  "message":"No API key found in request",
+  "request_id":"2613934b5a4705254c835812f7774835"
+}
+
+--- API Key incorrecta: GET /api/matriculas. Esperado: 401
+HTTP/1.1 401 Unauthorized
+Date: Wed, 25 Nov 2026 20:28:28 GMT
+Content-Type: application/json; charset=utf-8
+Connection: keep-alive
+WWW-Authenticate: Key
+Content-Length: 81
+X-Kong-Response-Latency: 1
+Server: kong/3.9.5
+X-Kong-Request-Id: 223f0b60b171a80c346f8f369bc3115c
+
+{
+  "message":"Unauthorized",
+  "request_id":"223f0b60b171a80c346f8f369bc3115c"
+}
+
+--- API Key valida: GET /api/matriculas. Esperado: 200
+HTTP/1.1 200 OK
+Content-Type: application/json
+Transfer-Encoding: chunked
+Connection: keep-alive
+X-RateLimit-Remaining-Minute: 3
+X-RateLimit-Limit-Minute: 5
+RateLimit-Remaining: 3
+RateLimit-Reset: 32
+RateLimit-Limit: 5
+X-Service-Name: matriculas
+Date: Wed, 25 Nov 2026 20:28:32 GMT
+Server: kong/3.9.5
+X-Kong-Upstream-Latency: 9
+X-Kong-Proxy-Latency: 4005
+Via: 1.1 kong/3.9.5
+X-Kong-Request-Id: d4385b47178c56333276c80651160f22
+
+{"id":501,"estudianteId":101,"estado":"ACTIVA"}
+
+--- Sin API Key: GET /api/pagos. Esperado: 401
+HTTP/1.1 401 Unauthorized
+Date: Wed, 25 Nov 2026 20:28:32 GMT
+Content-Type: application/json; charset=utf-8
+Connection: keep-alive
+WWW-Authenticate: Key
+Content-Length: 96
+X-Kong-Response-Latency: 1
+Server: kong/3.9.5
+X-Kong-Request-Id: 3045815b9edb167daca396385899e372
+
+{
+  "message":"No API key found in request",
+  "request_id":"3045815b9edb167daca396385899e372"
+}
+
+--- API Key incorrecta: GET /api/pagos. Esperado: 401
+HTTP/1.1 401 Unauthorized
+Date: Wed, 25 Nov 2026 20:28:32 GMT
+Content-Type: application/json; charset=utf-8
+Connection: keep-alive
+WWW-Authenticate: Key
+Content-Length: 81
+X-Kong-Response-Latency: 1
+Server: kong/3.9.5
+X-Kong-Request-Id: 3fe487779bb7ac3cfbae1e1fffed3f5c
+
+{
+  "message":"Unauthorized",
+  "request_id":"3fe487779bb7ac3cfbae1e1fffed3f5c"
+}
+
+--- API Key valida: GET /api/pagos. Esperado: 200
+HTTP/1.1 200 OK
+Content-Type: application/json
+Transfer-Encoding: chunked
+Connection: keep-alive
+X-RateLimit-Remaining-Minute: 2
+X-RateLimit-Limit-Minute: 5
+RateLimit-Remaining: 2
+RateLimit-Reset: 28
+RateLimit-Limit: 5
+X-Service-Name: pagos
+Date: Wed, 25 Nov 2026 20:28:36 GMT
+Server: kong/3.9.5
+X-Kong-Upstream-Latency: 7
+X-Kong-Proxy-Latency: 3998
+Via: 1.1 kong/3.9.5
+X-Kong-Request-Id: 75175d708e179d6422eb5654e1fff230
+
+{"id":701,"matriculaId":501,"valor":150,"estado":"PENDIENTE"}
+
+--- Sin API Key: GET /api/certificados. Esperado: 401
+HTTP/1.1 401 Unauthorized
+Date: Wed, 25 Nov 2026 20:28:36 GMT
+Content-Type: application/json; charset=utf-8
+Connection: keep-alive
+WWW-Authenticate: Key
+Content-Length: 96
+X-Kong-Response-Latency: 1
+Server: kong/3.9.5
+X-Kong-Request-Id: a643b37703ed340e3a84833645c55d73
+
+{
+  "message":"No API key found in request",
+  "request_id":"a643b37703ed340e3a84833645c55d73"
+}
+
+--- API Key incorrecta: GET /api/certificados. Esperado: 401
+HTTP/1.1 401 Unauthorized
+Date: Wed, 25 Nov 2026 20:28:36 GMT
+Content-Type: application/json; charset=utf-8
+Connection: keep-alive
+WWW-Authenticate: Key
+Content-Length: 81
+X-Kong-Response-Latency: 1
+Server: kong/3.9.5
+X-Kong-Request-Id: 124c985ac2e042385293436137f21441
+
+{
+  "message":"Unauthorized",
+  "request_id":"124c985ac2e042385293436137f21441"
+}
+
+--- API Key valida: GET /api/certificados. Esperado: 200
+HTTP/1.1 200 OK
+Content-Type: application/json
+Transfer-Encoding: chunked
+Connection: keep-alive
+X-RateLimit-Remaining-Minute: 2
+X-RateLimit-Limit-Minute: 3
+RateLimit-Remaining: 2
+RateLimit-Reset: 23
+RateLimit-Limit: 3
+X-Service-Name: certificados
+Date: Wed, 25 Nov 2026 20:28:41 GMT
+Server: kong/3.9.5
+X-Kong-Upstream-Latency: 8
+X-Kong-Proxy-Latency: 4000
+Via: 1.1 kong/3.9.5
+X-Kong-Request-Id: 114b0612437caa67032506177833e419
+
+{"id":901,"estudianteId":101,"tipo":"MATRICULA","estado":"EMITIDO"}
+
+--- Ruta no registrada. Esperado: 404
+HTTP/1.1 404 Not Found
+Date: Wed, 25 Nov 2026 20:28:41 GMT
+Content-Type: application/json; charset=utf-8
+Connection: keep-alive
+Content-Length: 103
+X-Kong-Response-Latency: 0
+Server: kong/3.9.5
+X-Kong-Request-Id: f52a5d1207c72113cae98e0d93e69f65
+
+{
+  "message":"no Route matched with those values",
+  "request_id":"f52a5d1207c72113cae98e0d93e69f65"
+}
+################ B. Limite general: 5 por minuto ################
+ Container educonnect-gateway-pagos-1 Running 
+ Container educonnect-gateway-certificados-1 Running 
+ Container educonnect-gateway-estudiantes-1 Running 
+ Container educonnect-gateway-matriculas-1 Running 
+ Container educonnect-gateway-kong-1 Recreate 
+ Container educonnect-gateway-kong-1 Recreated 
+ Container educonnect-gateway-kong-1 Starting 
+ Container educonnect-gateway-kong-1 Started 
+ Container educonnect-gateway-pagos-1 Waiting 
+ Container educonnect-gateway-certificados-1 Waiting 
+ Container educonnect-gateway-kong-1 Waiting 
+ Container educonnect-gateway-estudiantes-1 Waiting 
+ Container educonnect-gateway-matriculas-1 Waiting 
+ Container educonnect-gateway-matriculas-1 Healthy 
+ Container educonnect-gateway-estudiantes-1 Healthy 
+ Container educonnect-gateway-certificados-1 Healthy 
+ Container educonnect-gateway-pagos-1 Healthy 
+ Container educonnect-gateway-kong-1 Healthy 
+
+--- API Key valida: GET /api/estudiantes. Esperado: 200
+HTTP/1.1 200 OK
+Content-Type: application/json
+Transfer-Encoding: chunked
+Connection: keep-alive
+X-RateLimit-Remaining-Minute: 4
+X-RateLimit-Limit-Minute: 5
+RateLimit-Remaining: 4
+RateLimit-Reset: 58
+RateLimit-Limit: 5
+X-Service-Name: estudiantes
+Date: Wed, 25 Nov 2026 20:29:06 GMT
+Server: kong/3.9.5
+X-Kong-Upstream-Latency: 2
+X-Kong-Proxy-Latency: 4005
+Via: 1.1 kong/3.9.5
+X-Kong-Request-Id: a890363e2851743fde1a5123950f933b
+
+{"id":101,"nombre":"Ana Perez"}
+
+--- API Key valida: GET /api/estudiantes. Esperado: 200
+HTTP/1.1 200 OK
+Content-Type: application/json
+Transfer-Encoding: chunked
+Connection: keep-alive
+X-RateLimit-Remaining-Minute: 3
+X-RateLimit-Limit-Minute: 5
+RateLimit-Remaining: 3
+RateLimit-Reset: 54
+RateLimit-Limit: 5
+X-Service-Name: estudiantes
+Date: Wed, 25 Nov 2026 20:29:10 GMT
+Server: kong/3.9.5
+X-Kong-Upstream-Latency: 2
+X-Kong-Proxy-Latency: 4004
+Via: 1.1 kong/3.9.5
+X-Kong-Request-Id: fa5b2439ef1e9e6bd532784e75cc0621
+
+{"id":101,"nombre":"Ana Perez"}
+
+--- API Key valida: GET /api/estudiantes. Esperado: 200
+HTTP/1.1 200 OK
+Content-Type: application/json
+Transfer-Encoding: chunked
+Connection: keep-alive
+X-RateLimit-Remaining-Minute: 2
+X-RateLimit-Limit-Minute: 5
+RateLimit-Remaining: 2
+RateLimit-Reset: 50
+RateLimit-Limit: 5
+X-Service-Name: estudiantes
+Date: Wed, 25 Nov 2026 20:29:14 GMT
+Server: kong/3.9.5
+X-Kong-Upstream-Latency: 2
+X-Kong-Proxy-Latency: 3971
+Via: 1.1 kong/3.9.5
+X-Kong-Request-Id: 3f40e8264810723e8503d7630057b024
+
+{"id":101,"nombre":"Ana Perez"}
+
+--- API Key valida: GET /api/estudiantes. Esperado: 200
+HTTP/1.1 200 OK
+Content-Type: application/json
+Transfer-Encoding: chunked
+Connection: keep-alive
+X-RateLimit-Remaining-Minute: 1
+X-RateLimit-Limit-Minute: 5
+RateLimit-Remaining: 1
+RateLimit-Reset: 46
+RateLimit-Limit: 5
+X-Service-Name: estudiantes
+Date: Wed, 25 Nov 2026 20:29:18 GMT
+Server: kong/3.9.5
+X-Kong-Upstream-Latency: 2
+X-Kong-Proxy-Latency: 4003
+Via: 1.1 kong/3.9.5
+X-Kong-Request-Id: 0ea5bd7d4916b22d7c2df00b96f61e24
+
+{"id":101,"nombre":"Ana Perez"}
+
+--- API Key valida: GET /api/estudiantes. Esperado: 200
+HTTP/1.1 200 OK
+Content-Type: application/json
+Transfer-Encoding: chunked
+Connection: keep-alive
+X-RateLimit-Remaining-Minute: 0
+X-RateLimit-Limit-Minute: 5
+RateLimit-Remaining: 0
+RateLimit-Reset: 42
+RateLimit-Limit: 5
+X-Service-Name: estudiantes
+Date: Wed, 25 Nov 2026 20:29:22 GMT
+Server: kong/3.9.5
+X-Kong-Upstream-Latency: 1
+X-Kong-Proxy-Latency: 3986
+Via: 1.1 kong/3.9.5
+X-Kong-Request-Id: 011b781544bba440b6ace76250896552
+
+{"id":101,"nombre":"Ana Perez"}
+
+--- API Key valida: GET /api/estudiantes. Esperado: 429
+HTTP/1.1 429 Too Many Requests
+Date: Wed, 25 Nov 2026 20:29:22 GMT
+Content-Type: application/json; charset=utf-8
+Connection: keep-alive
+X-RateLimit-Remaining-Minute: 0
+X-RateLimit-Limit-Minute: 5
+RateLimit-Remaining: 0
+RateLimit-Reset: 38
+Retry-After: 38
+RateLimit-Limit: 5
+Content-Length: 92
+X-Kong-Response-Latency: 1
+Server: kong/3.9.5
+X-Kong-Request-Id: 0fa8ae5adc9f62378a58350f38877b2a
+
+{
+  "message":"API rate limit exceeded",
+  "request_id":"0fa8ae5adc9f62378a58350f38877b2a"
+}
+
+--- API Key valida: GET /api/matriculas. Esperado: 429
+HTTP/1.1 429 Too Many Requests
+Date: Wed, 25 Nov 2026 20:29:22 GMT
+Content-Type: application/json; charset=utf-8
+Connection: keep-alive
+X-RateLimit-Remaining-Minute: 0
+X-RateLimit-Limit-Minute: 5
+RateLimit-Remaining: 0
+RateLimit-Reset: 38
+Retry-After: 38
+RateLimit-Limit: 5
+Content-Length: 92
+X-Kong-Response-Latency: 1
+Server: kong/3.9.5
+X-Kong-Request-Id: 2f43724c2f62d45a0d6ef3570607fa48
+
+{
+  "message":"API rate limit exceeded",
+  "request_id":"2f43724c2f62d45a0d6ef3570607fa48"
+}
+
+--- API Key valida: GET /api/pagos. Esperado: 429
+HTTP/1.1 429 Too Many Requests
+Date: Wed, 25 Nov 2026 20:29:22 GMT
+Content-Type: application/json; charset=utf-8
+Connection: keep-alive
+X-RateLimit-Remaining-Minute: 0
+X-RateLimit-Limit-Minute: 5
+RateLimit-Remaining: 0
+RateLimit-Reset: 38
+Retry-After: 38
+RateLimit-Limit: 5
+Content-Length: 92
+X-Kong-Response-Latency: 2
+Server: kong/3.9.5
+X-Kong-Request-Id: d1c9354430844054f3a95879548b3d57
+
+{
+  "message":"API rate limit exceeded",
+  "request_id":"d1c9354430844054f3a95879548b3d57"
+}
+################ C. Limite de certificados: 3 por minuto ################
+ Container educonnect-gateway-estudiantes-1 Running 
+ Container educonnect-gateway-matriculas-1 Running 
+ Container educonnect-gateway-pagos-1 Running 
+ Container educonnect-gateway-certificados-1 Running 
+ Container educonnect-gateway-kong-1 Recreate 
+ Container educonnect-gateway-kong-1 Recreated 
+ Container educonnect-gateway-kong-1 Starting 
+ Container educonnect-gateway-kong-1 Started 
+ Container educonnect-gateway-matriculas-1 Waiting 
+ Container educonnect-gateway-pagos-1 Waiting 
+ Container educonnect-gateway-certificados-1 Waiting 
+ Container educonnect-gateway-kong-1 Waiting 
+ Container educonnect-gateway-estudiantes-1 Waiting 
+ Container educonnect-gateway-certificados-1 Healthy 
+ Container educonnect-gateway-matriculas-1 Healthy 
+ Container educonnect-gateway-pagos-1 Healthy 
+ Container educonnect-gateway-estudiantes-1 Healthy 
+ Container educonnect-gateway-kong-1 Healthy 
+
+--- API Key valida: GET /api/certificados. Esperado: 200
+HTTP/1.1 200 OK
+Content-Type: application/json
+Transfer-Encoding: chunked
+Connection: keep-alive
+RateLimit-Remaining: 2
+RateLimit-Reset: 57
+X-RateLimit-Limit-Minute: 3
+X-RateLimit-Remaining-Minute: 2
+RateLimit-Limit: 3
+X-Service-Name: certificados
+Date: Wed, 25 Nov 2026 20:30:07 GMT
+Server: kong/3.9.5
+X-Kong-Upstream-Latency: 2
+X-Kong-Proxy-Latency: 4005
+Via: 1.1 kong/3.9.5
+X-Kong-Request-Id: 423f261473b75127322bca2716304d38
+
+{"id":901,"estudianteId":101,"tipo":"MATRICULA","estado":"EMITIDO"}
+
+--- API Key valida: GET /api/certificados. Esperado: 200
+HTTP/1.1 200 OK
+Content-Type: application/json
+Transfer-Encoding: chunked
+Connection: keep-alive
+RateLimit-Remaining: 1
+RateLimit-Reset: 53
+X-RateLimit-Limit-Minute: 3
+X-RateLimit-Remaining-Minute: 1
+RateLimit-Limit: 3
+X-Service-Name: certificados
+Date: Wed, 25 Nov 2026 20:30:11 GMT
+Server: kong/3.9.5
+X-Kong-Upstream-Latency: 3
+X-Kong-Proxy-Latency: 4004
+Via: 1.1 kong/3.9.5
+X-Kong-Request-Id: 1a2cfd0df949a85251fedb1161c8705c
+
+{"id":901,"estudianteId":101,"tipo":"MATRICULA","estado":"EMITIDO"}
+
+--- API Key valida: GET /api/certificados. Esperado: 200
+HTTP/1.1 200 OK
+Content-Type: application/json
+Transfer-Encoding: chunked
+Connection: keep-alive
+RateLimit-Remaining: 0
+RateLimit-Reset: 49
+X-RateLimit-Limit-Minute: 3
+X-RateLimit-Remaining-Minute: 0
+RateLimit-Limit: 3
+X-Service-Name: certificados
+Date: Wed, 25 Nov 2026 20:30:15 GMT
+Server: kong/3.9.5
+X-Kong-Upstream-Latency: 2
+X-Kong-Proxy-Latency: 3970
+Via: 1.1 kong/3.9.5
+X-Kong-Request-Id: 91b8c95f2c12887f4fc74a7c0f8c4558
+
+{"id":901,"estudianteId":101,"tipo":"MATRICULA","estado":"EMITIDO"}
+
+--- API Key valida: GET /api/certificados. Esperado: 429
+HTTP/1.1 429 Too Many Requests
+Date: Wed, 25 Nov 2026 20:30:15 GMT
+Content-Type: application/json; charset=utf-8
+Connection: keep-alive
+RateLimit-Remaining: 0
+RateLimit-Reset: 45
+Retry-After: 45
+X-RateLimit-Limit-Minute: 3
+X-RateLimit-Remaining-Minute: 0
+RateLimit-Limit: 3
+Content-Length: 92
+X-Kong-Response-Latency: 1
+Server: kong/3.9.5
+X-Kong-Request-Id: d7a5916b60c9a368b39e9027b2ba524f
+
+{
+  "message":"API rate limit exceeded",
+  "request_id":"d7a5916b60c9a368b39e9027b2ba524f"
+}
+
+--- API Key valida: GET /api/estudiantes. Esperado: 200
+HTTP/1.1 200 OK
+Content-Type: application/json
+Transfer-Encoding: chunked
+Connection: keep-alive
+RateLimit-Remaining: 4
+RateLimit-Reset: 45
+RateLimit-Limit: 5
+X-RateLimit-Remaining-Minute: 4
+X-RateLimit-Limit-Minute: 5
+X-Service-Name: estudiantes
+Date: Wed, 25 Nov 2026 20:30:19 GMT
+Server: kong/3.9.5
+X-Kong-Upstream-Latency: 3
+X-Kong-Proxy-Latency: 4004
+Via: 1.1 kong/3.9.5
+X-Kong-Request-Id: 3208301af434e31b4ccaf51a31ff2428
+
+{"id":101,"nombre":"Ana Perez"}
+################ D. Backend no disponible y recuperacion ################
+ Container educonnect-gateway-estudiantes-1 Running 
+ Container educonnect-gateway-matriculas-1 Running 
+ Container educonnect-gateway-pagos-1 Running 
+ Container educonnect-gateway-certificados-1 Running 
+ Container educonnect-gateway-kong-1 Recreate 
+ Container educonnect-gateway-kong-1 Recreated 
+ Container educonnect-gateway-kong-1 Starting 
+ Container educonnect-gateway-kong-1 Started 
+ Container educonnect-gateway-estudiantes-1 Waiting 
+ Container educonnect-gateway-matriculas-1 Waiting 
+ Container educonnect-gateway-pagos-1 Waiting 
+ Container educonnect-gateway-certificados-1 Waiting 
+ Container educonnect-gateway-kong-1 Waiting 
+ Container educonnect-gateway-estudiantes-1 Healthy 
+ Container educonnect-gateway-pagos-1 Healthy 
+ Container educonnect-gateway-certificados-1 Healthy 
+ Container educonnect-gateway-matriculas-1 Healthy 
+ Container educonnect-gateway-kong-1 Healthy 
+ Container educonnect-gateway-pagos-1 Stopping 
+ Container educonnect-gateway-pagos-1 Stopped 
+
+--- API Key valida: GET /api/pagos. Esperado: 503
+HTTP/1.1 503 Service Temporarily Unavailable
+Date: Wed, 25 Nov 2026 20:30:50 GMT
+Content-Type: application/json; charset=utf-8
+Connection: keep-alive
+X-RateLimit-Remaining-Minute: 4
+X-RateLimit-Limit-Minute: 5
+RateLimit-Remaining: 4
+RateLimit-Limit: 5
+RateLimit-Reset: 22
+Content-Length: 91
+X-Kong-Response-Latency: 11977
+Server: kong/3.9.5
+X-Kong-Request-Id: 5dcbd1614918772471063a3ce9b26b07
+
+{
+  "message":"name resolution failed",
+  "request_id":"5dcbd1614918772471063a3ce9b26b07"
+}
+
+--- API Key valida: GET /api/estudiantes. Esperado: 200
+HTTP/1.1 200 OK
+Content-Type: application/json
+Transfer-Encoding: chunked
+Connection: keep-alive
+X-RateLimit-Remaining-Minute: 3
+X-RateLimit-Limit-Minute: 5
+RateLimit-Remaining: 3
+RateLimit-Limit: 5
+RateLimit-Reset: 10
+X-Service-Name: estudiantes
+Date: Wed, 25 Nov 2026 20:30:54 GMT
+Server: kong/3.9.5
+X-Kong-Upstream-Latency: 2
+X-Kong-Proxy-Latency: 3989
+Via: 1.1 kong/3.9.5
+X-Kong-Request-Id: 5c7f851c47b3e87246096355d0f16e5a
+
+{"id":101,"nombre":"Ana Perez"}
+
+--- API Key valida: GET /api/matriculas. Esperado: 200
+HTTP/1.1 200 OK
+Content-Type: application/json
+Transfer-Encoding: chunked
+Connection: keep-alive
+X-RateLimit-Remaining-Minute: 2
+X-RateLimit-Limit-Minute: 5
+RateLimit-Remaining: 2
+RateLimit-Limit: 5
+RateLimit-Reset: 6
+X-Service-Name: matriculas
+Date: Wed, 25 Nov 2026 20:30:58 GMT
+Server: kong/3.9.5
+X-Kong-Upstream-Latency: 2
+X-Kong-Proxy-Latency: 3992
+Via: 1.1 kong/3.9.5
+X-Kong-Request-Id: 1eaf9822d49678360f841454e763415f
+
+{"id":501,"estudianteId":101,"estado":"ACTIVA"}
+
+--- Logs de Kong sobre el fallo
+kong-1  | 2026/11/25 20:30:50 [error] 1406#0: *10305 [lua] init.lua:381: execute(): DNS resolution failed: dns server error: 3 name error. Tried: ["(short)pagos:(na) - cache-miss","pagos:33 - cache-miss/querying/dns server error: 2 server failure","pagos:1 - cache-miss/querying/dns server error: 2 server failure","pagos:5 - cache-miss/querying/dns server error: 3 name error"], client: 172.19.0.1, server: kong, request: "GET /api/pagos HTTP/1.1", host: "localhost:8000", request_id: "5dcbd1614918772471063a3ce9b26b07"
+ Container educonnect-gateway-pagos-1 Starting 
+ Container educonnect-gateway-pagos-1 Started 
+--- Esperando 45 segundos antes de comprobar la recuperacion
+
+--- API Key valida: GET /api/pagos. Esperado: 200
+HTTP/1.1 200 OK
+Content-Type: application/json
+Transfer-Encoding: chunked
+Connection: keep-alive
+X-RateLimit-Remaining-Minute: 4
+X-RateLimit-Limit-Minute: 5
+RateLimit-Remaining: 4
+RateLimit-Limit: 5
+RateLimit-Reset: 15
+X-Service-Name: pagos
+Date: Wed, 25 Nov 2026 20:31:49 GMT
+Server: kong/3.9.5
+X-Kong-Upstream-Latency: 11
+X-Kong-Proxy-Latency: 4005
+Via: 1.1 kong/3.9.5
+X-Kong-Request-Id: 42824d4587dd414fb53ea5270c50d455
+
+{"id":701,"matriculaId":501,"valor":150,"estado":"PENDIENTE"}
+
+=== Fin: mi� 25/11/2026 15:31:49.63 ===

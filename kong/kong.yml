@@ -1,0 +1,74 @@
+_format_version: "3.0"
+
+services:
+  # Service = destino (a que backend se envia)
+  - name: estudiantes-service
+    url: http://estudiantes:3000/estudiantes
+    connect_timeout: 5000
+    retries: 1
+    routes:
+      # Route = criterio de coincidencia (que peticiones van a ese destino)
+      - name: estudiantes-route
+        paths: [/api/estudiantes]
+        strip_path: true
+
+  - name: matriculas-service
+    url: http://matriculas:3000/matriculas
+    connect_timeout: 5000
+    retries: 1
+    routes:
+      - name: matriculas-route
+        paths: [/api/matriculas]
+        strip_path: true
+
+  - name: pagos-service
+    url: http://pagos:3000/pagos
+    connect_timeout: 5000
+    retries: 1
+    routes:
+      - name: pagos-route
+        paths: [/api/pagos]
+        strip_path: true
+
+  - name: certificados-service
+    url: http://certificados:3000/certificados
+    connect_timeout: 5000
+    retries: 1
+    routes:
+      - name: certificados-route
+        paths: [/api/certificados]
+        strip_path: true
+
+# Consumer = aplicacion externa que usa la API (credencial ficticia, solo para pruebas locales)
+consumers:
+  - username: portal-externo-demo
+    keyauth_credentials:
+      - key: demo-ficticia-3e5c63a79d7556f9
+
+plugins:
+  # Plugin global: exige API Key en todas las rutas
+  - name: key-auth
+    config:
+      key_names: [X-API-Key]
+      key_in_header: true
+      key_in_query: false
+      key_in_body: false
+      hide_credentials: true
+
+  # Maximo 5 solicitudes por minuto para el consumidor de prueba
+  - name: rate-limiting
+    consumer: portal-externo-demo
+    config:
+      minute: 5
+      policy: local
+      limit_by: consumer
+
+  # Limite propio: 3 por minuto para este consumidor solo en certificados.
+  # Al ser mas especifico (consumidor + ruta), reemplaza ahi al limite general.
+  - name: rate-limiting
+    consumer: portal-externo-demo
+    route: certificados-route
+    config:
+      minute: 3
+      policy: local
+      limit_by: consumer

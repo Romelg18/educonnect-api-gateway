@@ -1,0 +1,397 @@
+=== Inicio: mi� 25/11/2026 15:11:33.36 ===
+--- Recargar Kong (tambien reinicia el contador local de cuota)
+ Container educonnect-gateway-estudiantes-1 Running 
+ Container educonnect-gateway-matriculas-1 Running 
+ Container educonnect-gateway-pagos-1 Running 
+ Container educonnect-gateway-kong-1 Recreate 
+ Container educonnect-gateway-kong-1 Recreated 
+ Container educonnect-gateway-kong-1 Starting 
+ Container educonnect-gateway-kong-1 Started 
+ Container educonnect-gateway-matriculas-1 Waiting 
+ Container educonnect-gateway-pagos-1 Waiting 
+ Container educonnect-gateway-kong-1 Waiting 
+ Container educonnect-gateway-estudiantes-1 Waiting 
+ Container educonnect-gateway-estudiantes-1 Healthy 
+ Container educonnect-gateway-matriculas-1 Healthy 
+ Container educonnect-gateway-pagos-1 Healthy 
+ Container educonnect-gateway-kong-1 Healthy 
+
+============ 4a. Ruta no registrada ============
+--- Con API Key valida
+HTTP/1.1 404 Not Found
+Date: Wed, 25 Nov 2026 20:11:46 GMT
+Content-Type: application/json; charset=utf-8
+Connection: keep-alive
+Content-Length: 103
+X-Kong-Response-Latency: 1
+Server: kong/3.9.5
+X-Kong-Request-Id: 83e5f00e671cd56e09636a1c0268a247
+
+{
+  "message":"no Route matched with those values",
+  "request_id":"83e5f00e671cd56e09636a1c0268a247"
+}
+--- Sin API Key
+HTTP/1.1 404 Not Found
+Date: Wed, 25 Nov 2026 20:11:46 GMT
+Content-Type: application/json; charset=utf-8
+Connection: keep-alive
+Content-Length: 103
+X-Kong-Response-Latency: 0
+Server: kong/3.9.5
+X-Kong-Request-Id: adea116c145f0e16dd2de9083913df10
+
+{
+  "message":"no Route matched with those values",
+  "request_id":"adea116c145f0e16dd2de9083913df10"
+}
+============ 4b. Backend no disponible ============
+ Container educonnect-gateway-pagos-1 Stopping 
+ Container educonnect-gateway-pagos-1 Stopped 
+NAME                               IMAGE            COMMAND                  SERVICE       CREATED          STATUS                                PORTS
+educonnect-gateway-estudiantes-1   node:22-alpine   "docker-entrypoint.s…"   estudiantes   17 minutes ago   Up 17 minutes                         
+educonnect-gateway-kong-1          kong:3.9.5       "/docker-entrypoint.…"   kong          17 seconds ago   Up 15 seconds (healthy)               127.0.0.1:8000->8000/tcp
+educonnect-gateway-matriculas-1    node:22-alpine   "docker-entrypoint.s…"   matriculas    17 minutes ago   Up 17 minutes                         
+educonnect-gateway-pagos-1         node:22-alpine   "docker-entrypoint.s…"   pagos         17 minutes ago   Exited (137) Less than a second ago   
+
+--- GET /api/pagos
+HTTP/1.1 503 Service Temporarily Unavailable
+Date: Wed, 25 Nov 2026 20:12:02 GMT
+Content-Type: application/json; charset=utf-8
+Connection: keep-alive
+X-RateLimit-Remaining-Minute: 4
+RateLimit-Limit: 5
+RateLimit-Remaining: 4
+RateLimit-Reset: 10
+X-RateLimit-Limit-Minute: 5
+Content-Length: 91
+X-Kong-Response-Latency: 11981
+Server: kong/3.9.5
+X-Kong-Request-Id: d7863f446a4d546984de7e60b4d9b43f
+
+{
+  "message":"name resolution failed",
+  "request_id":"d7863f446a4d546984de7e60b4d9b43f"
+}
+Tiempo total: 11.986932 s
+
+--- GET /api/estudiantes
+HTTP/1.1 200 OK
+Content-Type: application/json
+Transfer-Encoding: chunked
+Connection: keep-alive
+X-RateLimit-Remaining-Minute: 4
+RateLimit-Limit: 5
+RateLimit-Remaining: 4
+RateLimit-Reset: 58
+X-RateLimit-Limit-Minute: 5
+X-Service-Name: estudiantes
+Date: Wed, 25 Nov 2026 20:12:06 GMT
+Server: kong/3.9.5
+X-Kong-Upstream-Latency: 2
+X-Kong-Proxy-Latency: 3992
+Via: 1.1 kong/3.9.5
+X-Kong-Request-Id: 59b7bf6071077d3eee4e1835d7c14831
+
+{"id":101,"nombre":"Ana Perez"}
+Tiempo total: 3.999133 s
+
+--- GET /api/matriculas
+HTTP/1.1 200 OK
+Content-Type: application/json
+Transfer-Encoding: chunked
+Connection: keep-alive
+X-RateLimit-Remaining-Minute: 3
+RateLimit-Limit: 5
+RateLimit-Remaining: 3
+RateLimit-Reset: 54
+X-RateLimit-Limit-Minute: 5
+X-Service-Name: matriculas
+Date: Wed, 25 Nov 2026 20:12:10 GMT
+Server: kong/3.9.5
+X-Kong-Upstream-Latency: 2
+X-Kong-Proxy-Latency: 3972
+Via: 1.1 kong/3.9.5
+X-Kong-Request-Id: c6ce094aab34225bc6ddf90745bd4f2d
+
+{"id":501,"estudianteId":101,"estado":"ACTIVA"}
+Tiempo total: 3.979416 s
+
+--- Logs de Kong
+kong-1  | 2026/11/25 20:11:36 [warn] 1#0: the "user" directive makes sense only if the master process runs with super-user privileges, ignored in /usr/local/kong/nginx.conf:7
+kong-1  | nginx: [warn] the "user" directive makes sense only if the master process runs with super-user privileges, ignored in /usr/local/kong/nginx.conf:7
+kong-1  | 2026/11/25 20:11:37 [notice] 1#0: [lua] init.lua:794: init(): [request-debug] token for request debugging: 61266637-e768-463c-ae19-fb27ea3c6110
+kong-1  | 2026/11/25 20:11:37 [notice] 1#0: using the "epoll" event method
+kong-1  | 2026/11/25 20:11:37 [notice] 1#0: openresty/1.25.3.2
+kong-1  | 2026/11/25 20:11:37 [notice] 1#0: OS: Linux 5.15.167.4-microsoft-standard-WSL2
+kong-1  | 2026/11/25 20:11:37 [notice] 1#0: getrlimit(RLIMIT_NOFILE): 1048576:1048576
+kong-1  | 2026/11/25 20:11:37 [notice] 1#0: start worker processes
+kong-1  | 2026/11/25 20:11:37 [notice] 1#0: start worker process 1405
+kong-1  | 2026/11/25 20:11:37 [notice] 1#0: start worker process 1406
+kong-1  | 2026/11/25 20:11:37 [notice] 1#0: start worker process 1407
+kong-1  | 2026/11/25 20:11:37 [notice] 1#0: start worker process 1408
+kong-1  | 2026/11/25 20:11:37 [notice] 1#0: start worker process 1409
+kong-1  | 2026/11/25 20:11:37 [notice] 1#0: start worker process 1410
+kong-1  | 2026/11/25 20:11:37 [notice] 1#0: start worker process 1411
+kong-1  | 2026/11/25 20:11:37 [notice] 1#0: start worker process 1412
+kong-1  | 2026/11/25 20:11:37 [notice] 1#0: start worker process 1413
+kong-1  | 2026/11/25 20:11:37 [notice] 1#0: start worker process 1414
+kong-1  | 2026/11/25 20:11:37 [notice] 1#0: start worker process 1415
+kong-1  | 2026/11/25 20:11:37 [notice] 1405#0: *1 [lua] broker.lua:215: init(): event broker is ready to accept connections on worker #0, context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [notice] 1#0: start worker process 1416
+kong-1  | 2026/11/25 20:11:37 [notice] 1#0: start worker process 1417
+kong-1  | 2026/11/25 20:11:37 [notice] 1#0: start worker process 1418
+kong-1  | 2026/11/25 20:11:37 [notice] 1#0: start worker process 1419
+kong-1  | 2026/11/25 20:11:37 [notice] 1#0: start worker process 1420
+kong-1  | 2026/11/25 20:11:37 [notice] 1408#0: *4 [lua] globalpatches.lua:75: sleep(): executing a blocking 'sleep' (0.001 seconds), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [notice] 1407#0: *3 [lua] globalpatches.lua:75: sleep(): executing a blocking 'sleep' (0.001 seconds), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [notice] 1405#0: *1 [lua] globalpatches.lua:75: sleep(): executing a blocking 'sleep' (0.001 seconds), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [notice] 1407#0: *3 [lua] globalpatches.lua:75: sleep(): executing a blocking 'sleep' (0.002 seconds), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [notice] 1408#0: *4 [lua] globalpatches.lua:75: sleep(): executing a blocking 'sleep' (0.002 seconds), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [notice] 1405#0: *1 [lua] globalpatches.lua:75: sleep(): executing a blocking 'sleep' (0.002 seconds), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [notice] 1407#0: *3 [lua] globalpatches.lua:75: sleep(): executing a blocking 'sleep' (0.004 seconds), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [notice] 1408#0: *4 [lua] globalpatches.lua:75: sleep(): executing a blocking 'sleep' (0.004 seconds), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [notice] 1407#0: *3 [lua] globalpatches.lua:75: sleep(): executing a blocking 'sleep' (0.008 seconds), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [notice] 1405#0: *1 [lua] globalpatches.lua:75: sleep(): executing a blocking 'sleep' (0.004 seconds), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [notice] 1408#0: *4 [lua] globalpatches.lua:75: sleep(): executing a blocking 'sleep' (0.008 seconds), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [notice] 1405#0: *1 [lua] globalpatches.lua:75: sleep(): executing a blocking 'sleep' (0.008 seconds), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [notice] 1407#0: *3 [lua] globalpatches.lua:75: sleep(): executing a blocking 'sleep' (0.016 seconds), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [notice] 1408#0: *4 [lua] globalpatches.lua:75: sleep(): executing a blocking 'sleep' (0.016 seconds), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [notice] 1405#0: *1 [lua] globalpatches.lua:75: sleep(): executing a blocking 'sleep' (0.016 seconds), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [notice] 1410#0: *7 [lua] globalpatches.lua:75: sleep(): executing a blocking 'sleep' (0.001 seconds), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [notice] 1411#0: *6 [lua] globalpatches.lua:75: sleep(): executing a blocking 'sleep' (0.001 seconds), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [notice] 1406#0: *2 [lua] init.lua:266: purge(): [DB cache] purging (local) cache, context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [notice] 1406#0: *2 [lua] init.lua:266: purge(): [DB cache] purging (local) cache, context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [notice] 1410#0: *7 [lua] globalpatches.lua:75: sleep(): executing a blocking 'sleep' (0.002 seconds), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [notice] 1406#0: *2 [kong] init.lua:590 declarative config loaded from /kong/kong.yml, context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [notice] 1411#0: *6 [lua] globalpatches.lua:75: sleep(): executing a blocking 'sleep' (0.002 seconds), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [notice] 1411#0: *6 [lua] globalpatches.lua:75: sleep(): executing a blocking 'sleep' (0.004 seconds), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1406#0: *2 [kong] init.lua:904 rate-limiting: config.redis_port is deprecated, please use config.redis.port instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1410#0: *7 [kong] init.lua:904 rate-limiting: config.redis_port is deprecated, please use config.redis.port instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1410#0: *7 [kong] init.lua:904 rate-limiting: config.redis_ssl is deprecated, please use config.redis.ssl instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1410#0: *7 [kong] init.lua:904 rate-limiting: config.redis_ssl_verify is deprecated, please use config.redis.ssl_verify instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1406#0: *2 [kong] init.lua:904 rate-limiting: config.redis_ssl is deprecated, please use config.redis.ssl instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1406#0: *2 [kong] init.lua:904 rate-limiting: config.redis_ssl_verify is deprecated, please use config.redis.ssl_verify instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1410#0: *7 [kong] init.lua:904 rate-limiting: config.redis_timeout is deprecated, please use config.redis.timeout instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1406#0: *2 [kong] init.lua:904 rate-limiting: config.redis_timeout is deprecated, please use config.redis.timeout instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1410#0: *7 [kong] init.lua:904 rate-limiting: config.redis_database is deprecated, please use config.redis.database instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1405#0: *1 [kong] init.lua:904 rate-limiting: config.redis_port is deprecated, please use config.redis.port instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1406#0: *2 [kong] init.lua:904 rate-limiting: config.redis_database is deprecated, please use config.redis.database instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1405#0: *1 [kong] init.lua:904 rate-limiting: config.redis_ssl is deprecated, please use config.redis.ssl instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1405#0: *1 [kong] init.lua:904 rate-limiting: config.redis_ssl_verify is deprecated, please use config.redis.ssl_verify instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1411#0: *6 [kong] init.lua:904 rate-limiting: config.redis_port is deprecated, please use config.redis.port instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1405#0: *1 [kong] init.lua:904 rate-limiting: config.redis_timeout is deprecated, please use config.redis.timeout instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1411#0: *6 [kong] init.lua:904 rate-limiting: config.redis_ssl is deprecated, please use config.redis.ssl instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1405#0: *1 [kong] init.lua:904 rate-limiting: config.redis_database is deprecated, please use config.redis.database instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1411#0: *6 [kong] init.lua:904 rate-limiting: config.redis_ssl_verify is deprecated, please use config.redis.ssl_verify instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1411#0: *6 [kong] init.lua:904 rate-limiting: config.redis_timeout is deprecated, please use config.redis.timeout instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1411#0: *6 [kong] init.lua:904 rate-limiting: config.redis_database is deprecated, please use config.redis.database instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1415#0: *10 [kong] init.lua:904 rate-limiting: config.redis_port is deprecated, please use config.redis.port instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1415#0: *10 [kong] init.lua:904 rate-limiting: config.redis_ssl is deprecated, please use config.redis.ssl instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1412#0: *8 [kong] init.lua:904 rate-limiting: config.redis_port is deprecated, please use config.redis.port instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1415#0: *10 [kong] init.lua:904 rate-limiting: config.redis_ssl_verify is deprecated, please use config.redis.ssl_verify instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1412#0: *8 [kong] init.lua:904 rate-limiting: config.redis_ssl is deprecated, please use config.redis.ssl instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1415#0: *10 [kong] init.lua:904 rate-limiting: config.redis_timeout is deprecated, please use config.redis.timeout instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1412#0: *8 [kong] init.lua:904 rate-limiting: config.redis_ssl_verify is deprecated, please use config.redis.ssl_verify instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1415#0: *10 [kong] init.lua:904 rate-limiting: config.redis_database is deprecated, please use config.redis.database instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1412#0: *8 [kong] init.lua:904 rate-limiting: config.redis_timeout is deprecated, please use config.redis.timeout instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1412#0: *8 [kong] init.lua:904 rate-limiting: config.redis_database is deprecated, please use config.redis.database instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1408#0: *4 [kong] init.lua:904 rate-limiting: config.redis_port is deprecated, please use config.redis.port instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1408#0: *4 [kong] init.lua:904 rate-limiting: config.redis_ssl is deprecated, please use config.redis.ssl instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1407#0: *3 [kong] init.lua:904 rate-limiting: config.redis_port is deprecated, please use config.redis.port instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1408#0: *4 [kong] init.lua:904 rate-limiting: config.redis_ssl_verify is deprecated, please use config.redis.ssl_verify instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1409#0: *5 [kong] init.lua:904 rate-limiting: config.redis_port is deprecated, please use config.redis.port instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1413#0: *9 [kong] init.lua:904 rate-limiting: config.redis_port is deprecated, please use config.redis.port instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1407#0: *3 [kong] init.lua:904 rate-limiting: config.redis_ssl is deprecated, please use config.redis.ssl instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1413#0: *9 [kong] init.lua:904 rate-limiting: config.redis_ssl is deprecated, please use config.redis.ssl instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1409#0: *5 [kong] init.lua:904 rate-limiting: config.redis_ssl is deprecated, please use config.redis.ssl instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1413#0: *9 [kong] init.lua:904 rate-limiting: config.redis_ssl_verify is deprecated, please use config.redis.ssl_verify instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1413#0: *9 [kong] init.lua:904 rate-limiting: config.redis_timeout is deprecated, please use config.redis.timeout instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1407#0: *3 [kong] init.lua:904 rate-limiting: config.redis_ssl_verify is deprecated, please use config.redis.ssl_verify instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1413#0: *9 [kong] init.lua:904 rate-limiting: config.redis_database is deprecated, please use config.redis.database instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1408#0: *4 [kong] init.lua:904 rate-limiting: config.redis_timeout is deprecated, please use config.redis.timeout instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1409#0: *5 [kong] init.lua:904 rate-limiting: config.redis_ssl_verify is deprecated, please use config.redis.ssl_verify instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1408#0: *4 [kong] init.lua:904 rate-limiting: config.redis_database is deprecated, please use config.redis.database instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1407#0: *3 [kong] init.lua:904 rate-limiting: config.redis_timeout is deprecated, please use config.redis.timeout instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1407#0: *3 [kong] init.lua:904 rate-limiting: config.redis_database is deprecated, please use config.redis.database instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1409#0: *5 [kong] init.lua:904 rate-limiting: config.redis_timeout is deprecated, please use config.redis.timeout instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1409#0: *5 [kong] init.lua:904 rate-limiting: config.redis_database is deprecated, please use config.redis.database instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1416#0: *11 [kong] init.lua:904 rate-limiting: config.redis_port is deprecated, please use config.redis.port instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1416#0: *11 [kong] init.lua:904 rate-limiting: config.redis_ssl is deprecated, please use config.redis.ssl instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1414#0: *12 [kong] init.lua:904 rate-limiting: config.redis_port is deprecated, please use config.redis.port instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1414#0: *12 [kong] init.lua:904 rate-limiting: config.redis_ssl is deprecated, please use config.redis.ssl instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1414#0: *12 [kong] init.lua:904 rate-limiting: config.redis_ssl_verify is deprecated, please use config.redis.ssl_verify instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1406#0: *2 [kong] init.lua:904 rate-limiting: config.redis_port is deprecated, please use config.redis.port instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1406#0: *2 [kong] init.lua:904 rate-limiting: config.redis_ssl is deprecated, please use config.redis.ssl instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1406#0: *2 [kong] init.lua:904 rate-limiting: config.redis_ssl_verify is deprecated, please use config.redis.ssl_verify instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1406#0: *2 [kong] init.lua:904 rate-limiting: config.redis_timeout is deprecated, please use config.redis.timeout instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1406#0: *2 [kong] init.lua:904 rate-limiting: config.redis_database is deprecated, please use config.redis.database instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1410#0: *7 [kong] init.lua:904 rate-limiting: config.redis_port is deprecated, please use config.redis.port instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1416#0: *11 [kong] init.lua:904 rate-limiting: config.redis_ssl_verify is deprecated, please use config.redis.ssl_verify instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1418#0: *13 [kong] init.lua:904 rate-limiting: config.redis_port is deprecated, please use config.redis.port instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1418#0: *13 [kong] init.lua:904 rate-limiting: config.redis_ssl is deprecated, please use config.redis.ssl instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1416#0: *11 [kong] init.lua:904 rate-limiting: config.redis_timeout is deprecated, please use config.redis.timeout instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1418#0: *13 [kong] init.lua:904 rate-limiting: config.redis_ssl_verify is deprecated, please use config.redis.ssl_verify instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1418#0: *13 [kong] init.lua:904 rate-limiting: config.redis_timeout is deprecated, please use config.redis.timeout instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1418#0: *13 [kong] init.lua:904 rate-limiting: config.redis_database is deprecated, please use config.redis.database instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1410#0: *7 [kong] init.lua:904 rate-limiting: config.redis_ssl is deprecated, please use config.redis.ssl instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1414#0: *12 [kong] init.lua:904 rate-limiting: config.redis_timeout is deprecated, please use config.redis.timeout instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1410#0: *7 [kong] init.lua:904 rate-limiting: config.redis_ssl_verify is deprecated, please use config.redis.ssl_verify instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1414#0: *12 [kong] init.lua:904 rate-limiting: config.redis_database is deprecated, please use config.redis.database instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1410#0: *7 [kong] init.lua:904 rate-limiting: config.redis_timeout is deprecated, please use config.redis.timeout instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1419#0: *15 [kong] init.lua:904 rate-limiting: config.redis_port is deprecated, please use config.redis.port instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1419#0: *15 [kong] init.lua:904 rate-limiting: config.redis_ssl is deprecated, please use config.redis.ssl instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1410#0: *7 [kong] init.lua:904 rate-limiting: config.redis_database is deprecated, please use config.redis.database instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1419#0: *15 [kong] init.lua:904 rate-limiting: config.redis_ssl_verify is deprecated, please use config.redis.ssl_verify instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1419#0: *15 [kong] init.lua:904 rate-limiting: config.redis_timeout is deprecated, please use config.redis.timeout instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1416#0: *11 [kong] init.lua:904 rate-limiting: config.redis_database is deprecated, please use config.redis.database instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1419#0: *15 [kong] init.lua:904 rate-limiting: config.redis_database is deprecated, please use config.redis.database instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1407#0: *3 [kong] init.lua:904 rate-limiting: config.redis_port is deprecated, please use config.redis.port instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1408#0: *4 [kong] init.lua:904 rate-limiting: config.redis_port is deprecated, please use config.redis.port instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1405#0: *1 [kong] init.lua:904 rate-limiting: config.redis_port is deprecated, please use config.redis.port instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1412#0: *8 [kong] init.lua:904 rate-limiting: config.redis_port is deprecated, please use config.redis.port instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1408#0: *4 [kong] init.lua:904 rate-limiting: config.redis_ssl is deprecated, please use config.redis.ssl instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1405#0: *1 [kong] init.lua:904 rate-limiting: config.redis_ssl is deprecated, please use config.redis.ssl instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1405#0: *1 [kong] init.lua:904 rate-limiting: config.redis_ssl_verify is deprecated, please use config.redis.ssl_verify instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1407#0: *3 [kong] init.lua:904 rate-limiting: config.redis_ssl is deprecated, please use config.redis.ssl instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1412#0: *8 [kong] init.lua:904 rate-limiting: config.redis_ssl is deprecated, please use config.redis.ssl instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1407#0: *3 [kong] init.lua:904 rate-limiting: config.redis_ssl_verify is deprecated, please use config.redis.ssl_verify instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1412#0: *8 [kong] init.lua:904 rate-limiting: config.redis_ssl_verify is deprecated, please use config.redis.ssl_verify instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1408#0: *4 [kong] init.lua:904 rate-limiting: config.redis_ssl_verify is deprecated, please use config.redis.ssl_verify instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1407#0: *3 [kong] init.lua:904 rate-limiting: config.redis_timeout is deprecated, please use config.redis.timeout instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1407#0: *3 [kong] init.lua:904 rate-limiting: config.redis_database is deprecated, please use config.redis.database instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1408#0: *4 [kong] init.lua:904 rate-limiting: config.redis_timeout is deprecated, please use config.redis.timeout instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1408#0: *4 [kong] init.lua:904 rate-limiting: config.redis_database is deprecated, please use config.redis.database instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1420#0: *16 [kong] init.lua:904 rate-limiting: config.redis_port is deprecated, please use config.redis.port instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1420#0: *16 [kong] init.lua:904 rate-limiting: config.redis_ssl is deprecated, please use config.redis.ssl instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1420#0: *16 [kong] init.lua:904 rate-limiting: config.redis_ssl_verify is deprecated, please use config.redis.ssl_verify instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1420#0: *16 [kong] init.lua:904 rate-limiting: config.redis_timeout is deprecated, please use config.redis.timeout instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1420#0: *16 [kong] init.lua:904 rate-limiting: config.redis_database is deprecated, please use config.redis.database instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1405#0: *1 [kong] init.lua:904 rate-limiting: config.redis_timeout is deprecated, please use config.redis.timeout instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1405#0: *1 [kong] init.lua:904 rate-limiting: config.redis_database is deprecated, please use config.redis.database instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1412#0: *8 [kong] init.lua:904 rate-limiting: config.redis_timeout is deprecated, please use config.redis.timeout instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1409#0: *5 [kong] init.lua:904 rate-limiting: config.redis_port is deprecated, please use config.redis.port instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1409#0: *5 [kong] init.lua:904 rate-limiting: config.redis_ssl is deprecated, please use config.redis.ssl instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1409#0: *5 [kong] init.lua:904 rate-limiting: config.redis_ssl_verify is deprecated, please use config.redis.ssl_verify instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1417#0: *14 [kong] init.lua:904 rate-limiting: config.redis_port is deprecated, please use config.redis.port instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1409#0: *5 [kong] init.lua:904 rate-limiting: config.redis_timeout is deprecated, please use config.redis.timeout instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1417#0: *14 [kong] init.lua:904 rate-limiting: config.redis_ssl is deprecated, please use config.redis.ssl instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1417#0: *14 [kong] init.lua:904 rate-limiting: config.redis_ssl_verify is deprecated, please use config.redis.ssl_verify instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1409#0: *5 [kong] init.lua:904 rate-limiting: config.redis_database is deprecated, please use config.redis.database instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1417#0: *14 [kong] init.lua:904 rate-limiting: config.redis_timeout is deprecated, please use config.redis.timeout instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1417#0: *14 [kong] init.lua:904 rate-limiting: config.redis_database is deprecated, please use config.redis.database instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1412#0: *8 [kong] init.lua:904 rate-limiting: config.redis_database is deprecated, please use config.redis.database instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1415#0: *10 [kong] init.lua:904 rate-limiting: config.redis_port is deprecated, please use config.redis.port instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1415#0: *10 [kong] init.lua:904 rate-limiting: config.redis_ssl is deprecated, please use config.redis.ssl instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1415#0: *10 [kong] init.lua:904 rate-limiting: config.redis_ssl_verify is deprecated, please use config.redis.ssl_verify instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1411#0: *6 [kong] init.lua:904 rate-limiting: config.redis_port is deprecated, please use config.redis.port instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1415#0: *10 [kong] init.lua:904 rate-limiting: config.redis_timeout is deprecated, please use config.redis.timeout instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1411#0: *6 [kong] init.lua:904 rate-limiting: config.redis_ssl is deprecated, please use config.redis.ssl instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1415#0: *10 [kong] init.lua:904 rate-limiting: config.redis_database is deprecated, please use config.redis.database instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1411#0: *6 [kong] init.lua:904 rate-limiting: config.redis_ssl_verify is deprecated, please use config.redis.ssl_verify instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1411#0: *6 [kong] init.lua:904 rate-limiting: config.redis_timeout is deprecated, please use config.redis.timeout instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1411#0: *6 [kong] init.lua:904 rate-limiting: config.redis_database is deprecated, please use config.redis.database instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1420#0: *16 [kong] init.lua:904 rate-limiting: config.redis_port is deprecated, please use config.redis.port instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1420#0: *16 [kong] init.lua:904 rate-limiting: config.redis_ssl is deprecated, please use config.redis.ssl instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1420#0: *16 [kong] init.lua:904 rate-limiting: config.redis_ssl_verify is deprecated, please use config.redis.ssl_verify instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1420#0: *16 [kong] init.lua:904 rate-limiting: config.redis_timeout is deprecated, please use config.redis.timeout instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1420#0: *16 [kong] init.lua:904 rate-limiting: config.redis_database is deprecated, please use config.redis.database instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1419#0: *15 [kong] init.lua:904 rate-limiting: config.redis_port is deprecated, please use config.redis.port instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1419#0: *15 [kong] init.lua:904 rate-limiting: config.redis_ssl is deprecated, please use config.redis.ssl instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1419#0: *15 [kong] init.lua:904 rate-limiting: config.redis_ssl_verify is deprecated, please use config.redis.ssl_verify instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1419#0: *15 [kong] init.lua:904 rate-limiting: config.redis_timeout is deprecated, please use config.redis.timeout instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1419#0: *15 [kong] init.lua:904 rate-limiting: config.redis_database is deprecated, please use config.redis.database instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1413#0: *9 [kong] init.lua:904 rate-limiting: config.redis_port is deprecated, please use config.redis.port instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1413#0: *9 [kong] init.lua:904 rate-limiting: config.redis_ssl is deprecated, please use config.redis.ssl instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1418#0: *13 [kong] init.lua:904 rate-limiting: config.redis_port is deprecated, please use config.redis.port instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1413#0: *9 [kong] init.lua:904 rate-limiting: config.redis_ssl_verify is deprecated, please use config.redis.ssl_verify instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1418#0: *13 [kong] init.lua:904 rate-limiting: config.redis_ssl is deprecated, please use config.redis.ssl instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1418#0: *13 [kong] init.lua:904 rate-limiting: config.redis_ssl_verify is deprecated, please use config.redis.ssl_verify instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1413#0: *9 [kong] init.lua:904 rate-limiting: config.redis_timeout is deprecated, please use config.redis.timeout instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1413#0: *9 [kong] init.lua:904 rate-limiting: config.redis_database is deprecated, please use config.redis.database instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1417#0: *14 [kong] init.lua:904 rate-limiting: config.redis_port is deprecated, please use config.redis.port instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1417#0: *14 [kong] init.lua:904 rate-limiting: config.redis_ssl is deprecated, please use config.redis.ssl instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1417#0: *14 [kong] init.lua:904 rate-limiting: config.redis_ssl_verify is deprecated, please use config.redis.ssl_verify instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1418#0: *13 [kong] init.lua:904 rate-limiting: config.redis_timeout is deprecated, please use config.redis.timeout instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1417#0: *14 [kong] init.lua:904 rate-limiting: config.redis_timeout is deprecated, please use config.redis.timeout instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1418#0: *13 [kong] init.lua:904 rate-limiting: config.redis_database is deprecated, please use config.redis.database instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1417#0: *14 [kong] init.lua:904 rate-limiting: config.redis_database is deprecated, please use config.redis.database instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1414#0: *12 [kong] init.lua:904 rate-limiting: config.redis_port is deprecated, please use config.redis.port instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1414#0: *12 [kong] init.lua:904 rate-limiting: config.redis_ssl is deprecated, please use config.redis.ssl instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1414#0: *12 [kong] init.lua:904 rate-limiting: config.redis_ssl_verify is deprecated, please use config.redis.ssl_verify instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1414#0: *12 [kong] init.lua:904 rate-limiting: config.redis_timeout is deprecated, please use config.redis.timeout instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1414#0: *12 [kong] init.lua:904 rate-limiting: config.redis_database is deprecated, please use config.redis.database instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1416#0: *11 [kong] init.lua:904 rate-limiting: config.redis_port is deprecated, please use config.redis.port instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1416#0: *11 [kong] init.lua:904 rate-limiting: config.redis_ssl is deprecated, please use config.redis.ssl instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1416#0: *11 [kong] init.lua:904 rate-limiting: config.redis_ssl_verify is deprecated, please use config.redis.ssl_verify instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1416#0: *11 [kong] init.lua:904 rate-limiting: config.redis_timeout is deprecated, please use config.redis.timeout instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [warn] 1416#0: *11 [kong] init.lua:904 rate-limiting: config.redis_database is deprecated, please use config.redis.database instead (deprecated after 4.0), context: init_worker_by_lua*
+kong-1  | 2026/11/25 20:11:37 [notice] 1406#0: *18 [lua] worker.lua:304: communicate(): worker #1 is ready to accept events from unix:/usr/local/kong/sockets/we, context: ngx.timer
+kong-1  | 2026/11/25 20:11:37 [notice] 1415#0: *288 [lua] worker.lua:304: communicate(): worker #10 is ready to accept events from unix:/usr/local/kong/sockets/we, context: ngx.timer
+kong-1  | 2026/11/25 20:11:37 [notice] 1410#0: *283 [lua] worker.lua:304: communicate(): worker #5 is ready to accept events from unix:/usr/local/kong/sockets/we, context: ngx.timer
+kong-1  | 2026/11/25 20:11:37 [notice] 1405#0: *168 [lua] broker.lua:263: run(): worker #1 connected to events broker (worker pid: 1406), client: unix:, server: kong_worker_events, request: "GET / HTTP/1.1", host: "localhost"
+kong-1  | 2026/11/25 20:11:37 [notice] 1405#0: *191 [lua] worker.lua:304: communicate(): worker #0 is ready to accept events from unix:/usr/local/kong/sockets/we, context: ngx.timer
+kong-1  | 2026/11/25 20:11:37 [notice] 1405#0: *2270 [lua] broker.lua:263: run(): worker #10 connected to events broker (worker pid: 1415), client: unix:, server: kong_worker_events, request: "GET / HTTP/1.1", host: "localhost"
+kong-1  | 2026/11/25 20:11:37 [notice] 1405#0: *2267 [lua] broker.lua:263: run(): worker #5 connected to events broker (worker pid: 1410), client: unix:, server: kong_worker_events, request: "GET / HTTP/1.1", host: "localhost"
+kong-1  | 2026/11/25 20:11:37 [notice] 1405#0: *2260 [lua] broker.lua:263: run(): worker #0 connected to events broker (worker pid: 1405), client: unix:, server: kong_worker_events, request: "GET / HTTP/1.1", host: "localhost"
+kong-1  | 2026/11/25 20:11:37 [notice] 1407#0: *588 [lua] worker.lua:304: communicate(): worker #2 is ready to accept events from unix:/usr/local/kong/sockets/we, context: ngx.timer
+kong-1  | 2026/11/25 20:11:37 [notice] 1405#0: *2272 [lua] broker.lua:263: run(): worker #2 connected to events broker (worker pid: 1407), client: unix:, server: kong_worker_events, request: "GET / HTTP/1.1", host: "localhost"
+kong-1  | 2026/11/25 20:11:37 [notice] 1409#0: *2961 [lua] worker.lua:304: communicate(): worker #4 is ready to accept events from unix:/usr/local/kong/sockets/we, context: ngx.timer
+kong-1  | 2026/11/25 20:11:37 [notice] 1405#0: *2994 [lua] broker.lua:263: run(): worker #4 connected to events broker (worker pid: 1409), client: unix:, server: kong_worker_events, request: "GET / HTTP/1.1", host: "localhost"
+kong-1  | 2026/11/25 20:11:37 [notice] 1420#0: *3263 [lua] worker.lua:304: communicate(): worker #15 is ready to accept events from unix:/usr/local/kong/sockets/we, context: ngx.timer
+kong-1  | 2026/11/25 20:11:37 [notice] 1405#0: *3289 [lua] broker.lua:263: run(): worker #15 connected to events broker (worker pid: 1420), client: unix:, server: kong_worker_events, request: "GET / HTTP/1.1", host: "localhost"
+kong-1  | 2026/11/25 20:11:37 [notice] 1418#0: *3331 [lua] worker.lua:304: communicate(): worker #13 is ready to accept events from unix:/usr/local/kong/sockets/we, context: ngx.timer
+kong-1  | 2026/11/25 20:11:37 [notice] 1405#0: *3355 [lua] broker.lua:263: run(): worker #13 connected to events broker (worker pid: 1418), client: unix:, server: kong_worker_events, request: "GET / HTTP/1.1", host: "localhost"
+kong-1  | 2026/11/25 20:11:37 [notice] 1411#0: *3600 [lua] worker.lua:304: communicate(): worker #6 is ready to accept events from unix:/usr/local/kong/sockets/we, context: ngx.timer
+kong-1  | 2026/11/25 20:11:37 [notice] 1405#0: *3646 [lua] broker.lua:263: run(): worker #6 connected to events broker (worker pid: 1411), client: unix:, server: kong_worker_events, request: "GET / HTTP/1.1", host: "localhost"
+kong-1  | 2026/11/25 20:11:38 [notice] 1419#0: *4242 [lua] worker.lua:304: communicate(): worker #14 is ready to accept events from unix:/usr/local/kong/sockets/we, context: ngx.timer
+kong-1  | 2026/11/25 20:11:38 [notice] 1405#0: *4331 [lua] broker.lua:263: run(): worker #14 connected to events broker (worker pid: 1419), client: unix:, server: kong_worker_events, request: "GET / HTTP/1.1", host: "localhost"
+kong-1  | 2026/11/25 20:11:38 [notice] 1413#0: *4643 [lua] worker.lua:304: communicate(): worker #8 is ready to accept events from unix:/usr/local/kong/sockets/we, context: ngx.timer
+kong-1  | 2026/11/25 20:11:38 [notice] 1405#0: *4742 [lua] broker.lua:263: run(): worker #8 connected to events broker (worker pid: 1413), client: unix:, server: kong_worker_events, request: "GET / HTTP/1.1", host: "localhost"
+kong-1  | 2026/11/25 20:11:38 [notice] 1417#0: *5432 [lua] worker.lua:304: communicate(): worker #12 is ready to accept events from unix:/usr/local/kong/sockets/we, context: ngx.timer
+kong-1  | 2026/11/25 20:11:38 [notice] 1405#0: *5522 [lua] broker.lua:263: run(): worker #12 connected to events broker (worker pid: 1417), client: unix:, server: kong_worker_events, request: "GET / HTTP/1.1", host: "localhost"
+kong-1  | 2026/11/25 20:11:38 [notice] 1412#0: *6171 [lua] worker.lua:304: communicate(): worker #7 is ready to accept events from unix:/usr/local/kong/sockets/we, context: ngx.timer
+kong-1  | 2026/11/25 20:11:38 [notice] 1405#0: *6259 [lua] broker.lua:263: run(): worker #7 connected to events broker (worker pid: 1412), client: unix:, server: kong_worker_events, request: "GET / HTTP/1.1", host: "localhost"
+kong-1  | 2026/11/25 20:11:38 [notice] 1408#0: *8377 [lua] worker.lua:304: communicate(): worker #3 is ready to accept events from unix:/usr/local/kong/sockets/we, context: ngx.timer
+kong-1  | 2026/11/25 20:11:38 [notice] 1414#0: *8379 [lua] worker.lua:304: communicate(): worker #9 is ready to accept events from unix:/usr/local/kong/sockets/we, context: ngx.timer
+kong-1  | 2026/11/25 20:11:38 [notice] 1405#0: *8386 [lua] broker.lua:263: run(): worker #3 connected to events broker (worker pid: 1408), client: unix:, server: kong_worker_events, request: "GET / HTTP/1.1", host: "localhost"
+kong-1  | 2026/11/25 20:11:38 [notice] 1405#0: *8387 [lua] broker.lua:263: run(): worker #9 connected to events broker (worker pid: 1414), client: unix:, server: kong_worker_events, request: "GET / HTTP/1.1", host: "localhost"
+kong-1  | 2026/11/25 20:11:38 [notice] 1416#0: *8982 [lua] worker.lua:304: communicate(): worker #11 is ready to accept events from unix:/usr/local/kong/sockets/we, context: ngx.timer
+kong-1  | 2026/11/25 20:11:38 [notice] 1405#0: *9055 [lua] broker.lua:263: run(): worker #11 connected to events broker (worker pid: 1416), client: unix:, server: kong_worker_events, request: "GET / HTTP/1.1", host: "localhost"
+kong-1  | 172.19.0.1 - - [25/Nov/2026:20:11:46 +0000] "GET /api/no-existe HTTP/1.1" 404 103 "-" "curl/8.23.0" kong_request_id: "83e5f00e671cd56e09636a1c0268a247"
+kong-1  | 172.19.0.1 - - [25/Nov/2026:20:11:46 +0000] "GET /api/no-existe HTTP/1.1" 404 103 "-" "curl/8.23.0" kong_request_id: "adea116c145f0e16dd2de9083913df10"
+kong-1  | 2026/11/25 20:12:02 [error] 1419#0: *10307 [lua] init.lua:381: execute(): DNS resolution failed: dns server error: 3 name error. Tried: ["(short)pagos:(na) - cache-miss","pagos:33 - cache-miss/querying/dns server error: 2 server failure","pagos:1 - cache-miss/querying/dns server error: 2 server failure","pagos:5 - cache-miss/querying/dns server error: 3 name error"], client: 172.19.0.1, server: kong, request: "GET /api/pagos HTTP/1.1", host: "localhost:8000", request_id: "d7863f446a4d546984de7e60b4d9b43f"
+kong-1  | 172.19.0.1 - - [25/Nov/2026:20:12:02 +0000] "GET /api/pagos HTTP/1.1" 503 91 "-" "curl/8.23.0" kong_request_id: "d7863f446a4d546984de7e60b4d9b43f"
+kong-1  | 172.19.0.1 - - [25/Nov/2026:20:12:06 +0000] "GET /api/estudiantes HTTP/1.1" 200 42 "-" "curl/8.23.0" kong_request_id: "59b7bf6071077d3eee4e1835d7c14831"
+kong-1  | 172.19.0.1 - - [25/Nov/2026:20:12:10 +0000] "GET /api/matriculas HTTP/1.1" 200 58 "-" "curl/8.23.0" kong_request_id: "c6ce094aab34225bc6ddf90745bd4f2d"
+
+============ Recuperacion ============
+ Container educonnect-gateway-pagos-1 Starting 
+ Container educonnect-gateway-pagos-1 Started 
+NAME                               IMAGE            COMMAND                  SERVICE       CREATED          STATUS                    PORTS
+educonnect-gateway-estudiantes-1   node:22-alpine   "docker-entrypoint.s…"   estudiantes   18 minutes ago   Up 18 minutes             
+educonnect-gateway-kong-1          kong:3.9.5       "/docker-entrypoint.…"   kong          51 seconds ago   Up 49 seconds (healthy)   127.0.0.1:8000->8000/tcp
+educonnect-gateway-matriculas-1    node:22-alpine   "docker-entrypoint.s…"   matriculas    18 minutes ago   Up 18 minutes             
+educonnect-gateway-pagos-1         node:22-alpine   "docker-entrypoint.s…"   pagos         18 minutes ago   Up 13 seconds             
+
+--- GET /api/pagos
+HTTP/1.1 503 Service Temporarily Unavailable
+Date: Wed, 25 Nov 2026 20:12:25 GMT
+Content-Type: application/json; charset=utf-8
+Connection: keep-alive
+X-RateLimit-Remaining-Minute: 2
+X-RateLimit-Limit-Minute: 5
+RateLimit-Remaining: 2
+RateLimit-Reset: 35
+RateLimit-Limit: 5
+Content-Length: 91
+X-Kong-Response-Latency: 3
+Server: kong/3.9.5
+X-Kong-Request-Id: 9e11a157bc0e726df0ec55289743e262
+
+{
+  "message":"name resolution failed",
+  "request_id":"9e11a157bc0e726df0ec55289743e262"
+}
+Tiempo total: 0.030476 s
+=== Fin ===

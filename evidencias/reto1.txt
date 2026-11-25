@@ -1,0 +1,71 @@
+=== Inicio: mi� 25/11/2026 15:01:22.87 ===
+--- Recargar Kong con la configuracion actual
+ Container educonnect-gateway-matriculas-1 Running 
+ Container educonnect-gateway-pagos-1 Running 
+ Container educonnect-gateway-estudiantes-1 Running 
+ Container educonnect-gateway-kong-1 Recreate 
+ Container educonnect-gateway-kong-1 Recreated 
+ Container educonnect-gateway-kong-1 Starting 
+ Container educonnect-gateway-kong-1 Started 
+ Container educonnect-gateway-pagos-1 Waiting 
+ Container educonnect-gateway-kong-1 Waiting 
+ Container educonnect-gateway-estudiantes-1 Waiting 
+ Container educonnect-gateway-matriculas-1 Waiting 
+ Container educonnect-gateway-pagos-1 Healthy 
+ Container educonnect-gateway-estudiantes-1 Healthy 
+ Container educonnect-gateway-matriculas-1 Healthy 
+ Container educonnect-gateway-kong-1 Healthy 
+NAME                               IMAGE            COMMAND                  SERVICE       CREATED          STATUS                    PORTS
+educonnect-gateway-estudiantes-1   node:22-alpine   "docker-entrypoint.s…"   estudiantes   7 minutes ago    Up 7 minutes              
+educonnect-gateway-kong-1          kong:3.9.5       "/docker-entrypoint.…"   kong          14 seconds ago   Up 11 seconds (healthy)   127.0.0.1:8000->8000/tcp
+educonnect-gateway-matriculas-1    node:22-alpine   "docker-entrypoint.s…"   matriculas    7 minutes ago    Up 7 minutes              
+educonnect-gateway-pagos-1         node:22-alpine   "docker-entrypoint.s…"   pagos         7 minutes ago    Up 7 minutes              
+
+--- GET http://localhost:8000/api/estudiantes
+HTTP/1.1 200 OK
+Content-Type: application/json
+Transfer-Encoding: chunked
+Connection: keep-alive
+X-Service-Name: estudiantes
+Date: Wed, 25 Nov 2026 20:01:41 GMT
+Server: kong/3.9.5
+X-Kong-Upstream-Latency: 2
+X-Kong-Proxy-Latency: 4004
+Via: 1.1 kong/3.9.5
+X-Kong-Request-Id: e82f2e4cdb4e9e0d25094312b6fd2e63
+
+{"id":101,"nombre":"Ana Perez"}
+
+--- GET http://localhost:8000/api/matriculas
+HTTP/1.1 200 OK
+Content-Type: application/json
+Transfer-Encoding: chunked
+Connection: keep-alive
+X-Service-Name: matriculas
+Date: Wed, 25 Nov 2026 20:01:45 GMT
+Server: kong/3.9.5
+X-Kong-Upstream-Latency: 3
+X-Kong-Proxy-Latency: 4003
+Via: 1.1 kong/3.9.5
+X-Kong-Request-Id: 7cbc284c15acf71e506c1069a270097a
+
+{"id":501,"estudianteId":101,"estado":"ACTIVA"}
+
+--- GET http://localhost:8000/api/pagos
+HTTP/1.1 200 OK
+Content-Type: application/json
+Transfer-Encoding: chunked
+Connection: keep-alive
+X-Service-Name: pagos
+Date: Wed, 25 Nov 2026 20:01:49 GMT
+Server: kong/3.9.5
+X-Kong-Upstream-Latency: 1
+X-Kong-Proxy-Latency: 3978
+Via: 1.1 kong/3.9.5
+X-Kong-Request-Id: 997e4c120ce2cc73845b047f4087dc15
+
+{"id":701,"matriculaId":501,"valor":150,"estado":"PENDIENTE"}
+--- Logs de los mocks
+estudiantes-1  | 2026-11-25T20:01:41.444Z [estudiantes] GET /estudiantes -> 200
+pagos-1        | 2026-11-25T20:01:49.515Z [pagos] GET /pagos -> 200
+matriculas-1   | 2026-11-25T20:01:45.496Z [matriculas] GET /matriculas -> 200
